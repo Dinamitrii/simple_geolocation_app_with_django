@@ -5,7 +5,7 @@ import json
 
 # Create your views here.
 
-dotenv.load_dotenv(".env")
+dotenv.load_dotenv("/static/.env")
 def index(request):
 
     ip = requests.get('https://api.ipify.org?format=json')
@@ -37,7 +37,7 @@ def weather(request):
 
     weather_json = json.loads(weather.text)
 
-    return render(request, 'weather.html.bck', {'data': weather_json})
+    return render(request, 'weather.html', {'data': weather_json})
 
 
 
