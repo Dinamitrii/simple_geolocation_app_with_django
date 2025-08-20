@@ -1,12 +1,27 @@
+import dotenv
 from django.shortcuts import render
 import requests
 import json
 
 # Create your views here.
+
+dotenv.load_dotenv(".env")
 def index(request):
+
     ip = requests.get('https://api.ipify.org?format=json')
-    ip_data = json.loads(ip.text)
-    res = requests.get('http://ip-api.com/json/24.48.0.1')
-    location_data_one = res.text
-    location_data = json.loads(location_data_one)
-    return render(request, 'index.html', {'data': location_data})
+    ip_json = json.loads(ip.text)
+
+    res = requests.get(f'http://ip-api.com/json/{ip_json["ip"]}?lang=en')
+
+    location_text = res.text
+    location_json = json.loads(location_text)
+
+    lat = location_json['lat']
+    lon = location_json['lon']
+
+
+    weather = requests.get(f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={"API_KEY"}')
+    weather_json = json.loads(weather.text)
+
+    
+    return render(request, 'index.html', {'data': location_json})
